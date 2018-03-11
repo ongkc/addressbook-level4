@@ -17,6 +17,8 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
+import seedu.address.model.transaction.Transaction;
+import seedu.address.model.transaction.TransactionList;
 
 /**
  * Wraps all data at the address-book level
@@ -25,6 +27,7 @@ import seedu.address.model.tag.UniqueTagList;
 public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons;
+    private final TransactionList transactions;
     private final UniqueTagList tags;
 
     /*
@@ -36,6 +39,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     {
         persons = new UniquePersonList();
+        transactions = new TransactionList();
         tags = new UniqueTagList();
     }
 
@@ -161,6 +165,8 @@ public class AddressBook implements ReadOnlyAddressBook {
         // TODO: refine later
     }
 
+    public ObservableList<Transaction> getTransactionList() { return transactions.asObservableList(); }
+
     @Override
     public ObservableList<Person> getPersonList() {
         return persons.asObservableList();
@@ -183,5 +189,9 @@ public class AddressBook implements ReadOnlyAddressBook {
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(persons, tags);
+    }
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
     }
 }

@@ -19,7 +19,6 @@ public class Person {
     private final Phone phone;
     private final Email email;
     private final Address address;
-
     private final UniqueTagList tags;
 
     /**
@@ -34,6 +33,7 @@ public class Person {
         // protect internal tags from changes in the arg list
         this.tags = new UniqueTagList(tags);
     }
+
 
     public Name getName() {
         return name;

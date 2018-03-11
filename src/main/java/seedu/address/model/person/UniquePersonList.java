@@ -22,7 +22,7 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
  */
 public class UniquePersonList implements Iterable<Person> {
 
-    private final ObservableList<Person> internalList = FXCollections.observableArrayList();
+    private final static ObservableList<Person> internalList = FXCollections.observableArrayList();
 
     /**
      * Returns true if the list contains an equivalent person as the given argument.
@@ -117,4 +117,16 @@ public class UniquePersonList implements Iterable<Person> {
     public int hashCode() {
         return internalList.hashCode();
     }
+
+    public static Person findPerson(Name name) {
+        Person foundPerson = null;
+        for (Person p : internalList) {
+            if (p.getName() == name) {
+                foundPerson = p; 
+            }
+        }
+        return foundPerson;
+    }
+
+    
 }

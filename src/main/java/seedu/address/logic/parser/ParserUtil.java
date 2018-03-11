@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,8 +12,11 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.Amount;
+import seedu.address.model.person.Description;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 
@@ -165,4 +169,36 @@ public class ParserUtil {
         }
         return tagSet;
     }
+
+    public static Amount parseAmount(String amount) throws IllegalValueException {
+        requireNonNull(amount);
+        String trimmedAmount = amount.trim();
+        if (!Amount.isValidAmount(trimmedAmount)) {
+            throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);
+        }
+        return new Amount(trimmedAmount);
+    }
+
+    public static Optional<Amount> parseAmount(Optional<String> amount) throws IllegalValueException {
+        requireNonNull(amount);
+        return amount.isPresent() ? Optional.of(parseAmount(amount.get())) : Optional.empty();
+
+    }
+
+    public static Description parseDescription(String description) throws IllegalValueException {
+        requireNonNull(description);
+        String trimmedDescription = description.trim();
+        if (!Amount.isValidAmount(trimmedDescription)) {
+            throw new IllegalValueException(Amount.MESSAGE_AMOUNT_CONSTRAINTS);
+        }
+        return new Description(trimmedDescription);
+    }
+
+    public static Optional<Description> parseDescription(Optional<String> description) throws IllegalValueException {
+        requireNonNull(description);
+        return description.isPresent() ? Optional.of(parseDescription(description.get())) : Optional.empty();
+
+    }
+
+
 }
