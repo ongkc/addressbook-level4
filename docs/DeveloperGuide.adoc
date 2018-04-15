@@ -31,7 +31,6 @@ This app will not work with earlier versions of Java 8.
 IntelliJ by default has Gradle and JavaFx plugins installed. +
 Do not disable them. If you have disabled them, go to `File` > `Settings` > `Plugins` to re-enable them.
 
-
 === Setting up the project in your computer
 
 . Fork this repo, and clone the fork to your computer
@@ -231,7 +230,6 @@ Classes used by multiple components are in the `seedu.addressbook.commons` packa
 
 This section describes some noteworthy details on how certain features are implemented.
 
-// tag::undoredo[]
 === Undo/Redo feature
 ==== Current Implementation
 
@@ -357,7 +355,6 @@ image::UndoRedoActivityDiagram.png[width="650"]
 * **Alternative 2:** Use `HistoryManager` for undo/redo
 ** Pros: We do not need to maintain a separate stack, and just reuse what is already in the codebase.
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two * different things.
-// end::undoredo[]
 
 // tag::addtransaction[]
 ===  Add Transaction feature
@@ -393,7 +390,6 @@ image::AddTransactionCode.png[width="800"]
 
 image::CalculationUtil.png[width="800"]
 
-
 ** Debt Table Object
 
 image::DebtTable.png[width="800"]
@@ -421,7 +417,7 @@ Why it is implemented that way
 
 ** Alternative 1: Create a HashMap Object
 ** Pros: Allow debt to be updated easily when a person added or deleted, or when a person information is changed
-** Cons: Find method is required to retrieve the debt information for each person
+** Cons: Find person method is required to retrieve the debt information for each person
 
 ** Alternative 2: Create a list of debtors or creditors unique to each person
 ** Pros: Debt amount can be easily retrieved
@@ -443,7 +439,6 @@ Why it is implemented that way
 There are two ways to triggered the `Select` feature. The first one uses the Command Line Interface, by taping `Select INDEX`.
 The second one directly through the user interface, by clicking on a `Person card`. +
 These two interactions will result in raising the same events. +
-
 
 `SelectCommand` is not a undoable command.
 
@@ -493,8 +488,8 @@ image::TransactionPredicate.png[width="800"]
 
 ==== PersonPanelNoSelection Event process
 In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type
-another command that will clear the selection, such as the `find` command, or by directly deselecting a selected
-`PersonCard` using "*Ctrl + Clic*".
+another command that will clear the selection, such as the `findPerson` command, or by directly deselecting a selected
+`PersonCard` using "*Ctrl + Click*".
 
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
@@ -540,7 +535,6 @@ Why it is implemented that way
 ** Pro: This will ensure exception to be thrown at the earlier part of the execution and prevent bugs from arising due to the inexistent of payer or payee(s)
 ** Con: More line of codes and method has to be added
 
-//tag::personchanges[]
 === Edit Person changes persons information in Transaction list Mechanism
 
 ==== Edit Person changes persons in Transaction list Implementation
@@ -569,7 +563,62 @@ Why it is implemented that way
 ** Alternative 2: Checking is done concurrently during parse of delete transaction argument, similar to add transaction
 ** Pro: This will ensure exception to be thrown at the earlier part of the execution and prevent bugs from arising due to the inexistent of payer or payee(s)
 ** Con: More line of codes and method has to be added
-//end::personchanges[]
+//end::deletetransaction[]
+
+//tag::findtransaction[]
+=== [Proposed] Find Transaction feature
+==== Proposed Implementation
+
+A `FindTransaction` feature may be implemented as a new command in a similar way to all other commands, especially `FindPersonCommand`. The high level implementation can be seen below.
+
+.Component interactions for `findTransaction` command
+image::FindTransactionHighLevelSequenceDiagram.png[width="800"]
+
+The user can call this command by typing `findTransaction [keyword]` in the command box, where [keyword] represents any number of keywords separate by spaces.
+The parse() method of the `FindTransactionCommandParser` will parse the command and and return a FindTransactionCommand. This command is then executed by the
+`LogicManager` which achieves this by calling the execute() method of the `FindTransactionCommand`. At this point, a method named findTransaction([keyword])
+will be called in the ModelManager to find all transactions based on the [keyword] and a `CommandResult` will be returned.
+
+.Sequence diagram for the logic component of the `findTransaction` command
+image::FindTransactionLogicSequenceDiagram.png[width="800"]
+
+==== Design Considerations
+
+===== Aspect: Number of transactions to return
+* **Alternative 1:** Return all transactions that match any of the keywords
+** Pros: Easy to implement and follows the behaviour of the `findPerson` command.
+** Cons: May yield a slow response time when there are hundreds or thousands of transactions to search through.
+* **Alternative 2:** Return all transactions that match any of the keywords up to a limit
+** Pros: Will guarantee a certain response time based on the specified limit.
+** Cons: May not be a complete search due to the arbitrary limit.
+//end::findtransaction[]
+
+//tag::addgroup[]
+=== [Proposed] Add Group feature
+==== Proposed Implementation
+
+An `AddGroup` feature may be implemented as a new command in a similar way to all other commands, especially the `AddPersonCommand` and the `AddTransactionCommand`.
+
+The purpose of this command would to add a new group to associate some number of existing persons together as a group. With groups, transactions that occur for a specific
+event or purpose between a set number of people can be easily separated from other transactions.
+
+There will be an `AddGroupCommand` and `AddGroupCommandParser` that works in the same sequence as all other commands.
+
+The `Group` class will need to be created and should include a list of Persons and Transaction IDs. See the diagram below for the class implementation:
+
+.Class diagram for `Group`
+image::GroupClassDiagram.png[width="800"]
+
+==== Design Considerations
+
+===== Aspect: Associating transactions with groups
+* **Alternative 1:** Require that all transactions be associated with a group
+** Pros: Makes it easy to retrieve transactions by group
+** Cons: Imposes the group feature on all persons and transactions, and will require current transactions to be retroactively associated with groups
+* **Alternative 2:** Allow for both transactions that are associated and unassociated with a group
+** Pros: Provides more flexibility for users who do not want to use the groups feature
+** Cons: Requires complicated logic to handle the tiered categorization, especially if a transaction involves all of the same people that exist in a group
+//end::addgroup[]
 
 === Logging
 
@@ -988,7 +1037,7 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Target user profile*:
 
-* person who shares many expenses with other people (friends, family, classmates, etc.)
+* traveller who shares many expenses with other people (friends, family, travel buddies, etc.)
 * prefer desktop apps over other types
 * prefers typing over mouse input
 * is reasonably comfortable using CLI apps
@@ -1251,6 +1300,7 @@ Use case ends.
 [discrete]
 //end::usecases[]
 
+//start::nonfunctionalrequirements[]
 [appendix]
 == Non Functional Requirements
 
@@ -1262,9 +1312,9 @@ Use case ends.
 .  Should work in both 32-bit and 64-bit environments.
 .  Should be usable by a novice who has never used this system before.
 .  The project is expected to adhere to a schedule that delivers a feature/bug-fix update every week.
+//end::nonfunctionalrequirements[]
 
-_{More to be added}_
-
+//start::glossary[]
 [appendix]
 == Glossary
 
@@ -1291,8 +1341,9 @@ A method of dividing the total cost of an expense by percentages that add up to 
 
 [[recurring-expense]] Recurring expense::
 An expense that does not change in amount over a repeated time period (e.g. every month) and is always incurred by a user
-//tag::manualtesting[]
+//end::glossary[]
 
+//tag::manualtesting[]
 [appendix]
 == Instructions for Manual Testing
 
