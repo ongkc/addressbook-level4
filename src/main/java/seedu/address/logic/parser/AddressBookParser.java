@@ -81,7 +81,7 @@ public class AddressBookParser {
             return new ClearCommand();
 
         case FindPersonCommand.COMMAND_WORD:
-            return new FindCommandParser().parse(arguments, model);
+            return new FindPersonCommandParser().parse(arguments, model);
 
         case ListPersonsCommand.COMMAND_WORD:
             return new ListPersonsCommand();
