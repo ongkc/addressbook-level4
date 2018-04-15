@@ -219,10 +219,14 @@ Examples:
 * Adds a transaction where John Doe paid $1000.00. This is split evenly by default with Tom Riddle.
 Thus, the total amount spent by John Doe and by Tom Riddle will each increase by 500.00.
 
+image::AddTransactionExampleSplitEvenlySuccess.png[width="800"]
+
 2. `addTransaction type/payment payer/Betsy Crowe a/30.00 d/Team T-shirts payee/John Doe payee/Bernice Yu m/units units/1, 2, 3`
 * Adds a transaction where Betsy Crowe paid $30.00 for team t-shirts. The split method is by units with a split of
 "1, 2, 3". The total number of units is 6. Thus, Betsy Crowe's total amount spent will increase by 30.00 * (1/6) = 5.00. Similarly, John Doe's
  total amount spent will increase by 10.00 and Bernice Yu's total amount spent will increase by 15.00.
+
+image::AddTransactionExampleSplitByUnitsSuccess.png[width="800"]
 
 3. `addTransaction type/payment payer/Steven Jia a/50.00 d/Taxi ride payee/Paul Mignot payee/Kok Cong Ong m/percentage percentage/50, 10, 10`
 * The *addTransaction* command fails because the sum of the percentages is not 100.
@@ -231,6 +235,8 @@ Thus, the total amount spent by John Doe and by Tom Riddle will each increase by
 * Adds a transaction where Steven Jia paid $50.00 for a shared taxi ride. The split method is by percentage with a split of
 "38, 28, 34". Thus, Steven Jia's total amount spent will increase by 50.00 * (38/100) = 19.00. Similarly, Paul Mignot's
 total amount spent will increase by 14.00 and Kok Cong Ong's total amount spent will increase by 17.00.
+
+image::AddTransactionExampleSplitByPercentageSuccess.png[width="800"]
 
 5. `addTransaction type/paydebt payer/Tom Riddle a/500.00 d/Pay John for last night's dinner payee/John Doe`
 * Adds a transaction where Tom Riddle paid John Doe $500.00.
