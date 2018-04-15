@@ -568,7 +568,7 @@ image::Debtors_CreditorCodeSetCreditor.png[width="800"]
 ==== Design Considerations
 Why it is implemented that way
 
-===== Aspect: Checking the existence of payer or payee in the transaction to be deleted
+===== Aspect: How debtors and creditors list is being updated
 
 ** Alternative 1: The creditor list and debtor list is not unique to each person
 ** Pro: The current implementation allow the creditor list and debtor list to be updated responsively based on any changes on the debtTable.
