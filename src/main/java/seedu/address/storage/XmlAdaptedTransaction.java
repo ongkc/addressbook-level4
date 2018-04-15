@@ -188,15 +188,14 @@ public class XmlAdaptedTransaction {
 
         final Date dateTime = this.dateTime;
 
+        //@@author steven-jia
         if (this.payees.isEmpty()) {
-
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Payees"));
         }
 
         for (XmlAdaptedPerson payee: this.payees) {
             validatePersonFields(payee.toModelType());
         }
-
         UniquePersonList convertedPayees = new UniquePersonList();
         for (XmlAdaptedPerson payee: this.payees) {
             convertedPayees.add(payee.toModelType());
