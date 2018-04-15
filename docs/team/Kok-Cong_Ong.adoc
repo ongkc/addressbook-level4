@@ -60,7 +60,8 @@ image::CantDeletePerson2.png[width="800"]
 Furthermore, a transaction can only be added only if the person in the transaction existed.
 
 
-=== *Code contributed*: [https://github.com/ongkc/addressbook-level4/blob/master/collated/functional/ongkc.md[Functional code]] +
+=== *Code contributed*:
+[https://github.com/ongkc/addressbook-level4/blob/master/collated/functional/ongkc.md[Functional code]] +
  [https://github.com/ongkc/addressbook-level4/blob/master/collated/test/ongkc.md[Test code]]
 
 * *Other contributions*:
