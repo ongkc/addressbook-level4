@@ -211,15 +211,13 @@ public class MainWindow extends UiPart<Stage> {
     private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         logic.updateFilteredTransactionList(event.getNewSelection().person);
-        logic.updateDebtorsList(event.getNewSelection().person);
-        logic.updateCreditorsList(event.getNewSelection().person);
+        logic.updateDebtorsAndCreditorList(event.getNewSelection().person);
     }
 
     @Subscribe
     private void handlePersonPanelNoSelectionEvent(PersonPanelNoSelectionEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         logic.updateFilteredTransactionList();
-        logic.updateDebtorsList();
-        logic.updateCreditorsList();
+        logic.updateDebtorsAndCreditorList();
     }
 }

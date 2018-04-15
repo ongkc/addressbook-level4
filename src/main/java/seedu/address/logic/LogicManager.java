@@ -99,38 +99,24 @@ public class LogicManager extends ComponentManager implements Logic {
     }
     //@@author ongkc
     /**
-     * Update the debt list to an empty list
+     * Update the Debtor and Creditor list to an empty list
      */
     @Override
-    public void updateDebtorsList() {
+    public void updateDebtorsAndCreditorList() {
         model.updateDebtorList(PREDICATE_SHOW_NO_DEBTORS);
+        model.updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
     }
     /**
-     * Update the people in the debt list
+     * Update the people in the Debtor and Creditor list
      */
-    public void updateDebtorsList(Person person) {
+    public void updateDebtorsAndCreditorList(Person person) {
+        model.updateCreditorList(PREDICATE_SHOW_ALL_CREDITORS);
         model.updateDebtorList(PREDICATE_SHOW_ALL_DEBTORS);
         DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
         DebtsList debtsList = debtsTable.get(person);
         model.getAddressBook().setDebtors(debtsList);
-    }
-
-    /**
-     * Update creditor list to an empty list
-     */
-    @Override
-    public void updateCreditorsList() {
-        model.updateCreditorList(PREDICATE_SHOW_NO_CREDITORS);
-    }
-
-    /**
-     * Update the people in the creditor list
-     */
-    public void updateCreditorsList(Person person) {
-        model.updateCreditorList(PREDICATE_SHOW_ALL_CREDITORS);
-        DebtsTable debtsTable = model.getAddressBook().getDebtsTable();
-        DebtsList debtsList = debtsTable.get(person);
         model.getAddressBook().setCreditors(debtsList);
     }
+
 
 }

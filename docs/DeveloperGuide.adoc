@@ -559,35 +559,45 @@ Why it is implemented that way
 ** Pro: This will ensure exception to be thrown at the earlier part of the execution and prevent bugs from arising due to the inexistent of payer or payee(s)
 ** Con: More line of codes and method has to be added
 
-=== Edit Person changes persons information in Transaction list Mechanism
+//end::deletetransaction[]
 
-==== Edit Person changes persons in Transaction list Implementation
+//tag::Debtors_Creditor_Panel
+=== Debtors & Creditors List Table Mechanism
 
-Delete transaction feature was implemented the same as add transaction feature, please refer to addTransaction sequence diagram above. Similarly, for a transaction to be deleted the specify payer or payee(s) in that transaction need to exist in the application, otherwise an exception will be thrown. However the checking is done in when deleteTransaction method is called, and uses findPersonByName method when trying to update payer or payee(s) amount if a transaction were to delete. The updating the payer or payee(s) amount spent is successfully then the indicated transaction will be deleted successfully. In addition, calculation methods from calculationUtil object used are different from add transaction command. Refer to the code below for example,
+==== Debtors & Creditors List Table Implementation
+
+Debtors and Creditor list will only be updated when a person in the person card panel list is selected. When a person is selected, PersonPanelSelectionChangedEvent will be handled by the UI and post an updateDebtorsList and updateCreditorsList event which will be handled by logic as shown by the code below.
 
 * Code Listing
 
-** Delete Transaction
+image::PersonSelection.png[width="800"]
 
-image::DeleteTransaction.png[width="800"]
+image::Debtors_Creditor.png[width="800"]
 
-** Delete Transaction Calculation
 
-image::DeleteTransactionCode.png[width="800"]
+After which to in order to set the new creditors or debtors lists, a debtList with respect to the person selected will be retrieved using debtTable.get(person) where the person is the key in debtTable object and debtList is the value. Subsequently, using the debtList of the person selected, setDebtor(debtList) and setCreditor(debtList) method will be executed, and the FilteredDebtorsLists and FilteredCreditorList will be updated as shown by the sequence diagram above. Please refer to the diagram and code below.
+
+* Code Listing
+
+image::Debtors_CreditorCode.png[width="800"]
+
+image::Debtors_CreditorCodeSet.png[width="800"]
+
+image::Debtors_CreditorCodeSetCreditor.png[width="800"]
 
 ==== Design Considerations
 Why it is implemented that way
 
 ===== Aspect: Checking the existence of payer or payee in the transaction to be deleted
 
-** Alternative 1: Checking is done concurrently when trying to update the amount spent by the payer and payee(s) (Current)
-** Pro: This allows less method to be created
-** Con: If the check fail while updating the payer and payee(s) new amount spent, the payer or payee(s) new amount spent and as well as debt table will be affected and will be updated by the wrong amount.
+** Alternative 1: The creditor list and debtor list is not unique to each person
+** Pro: The current implementation allow the creditor list and debtor list to be updated responsively based on any changes on the debtTable.
+** Con: Once a creditor list or debtor list is updated, it no longer able to retrieve past data.
 
-** Alternative 2: Checking is done concurrently during parse of delete transaction argument, similar to add transaction
-** Pro: This will ensure exception to be thrown at the earlier part of the execution and prevent bugs from arising due to the inexistent of payer or payee(s)
-** Con: More line of codes and method has to be added
-//end::deletetransaction[]
+** Alternative 2: Each person has a unique debtors and creditor list
+** Pro:  Easy retrieve of debtors and creditors
+** Con: Once a new transaction is added, all the creditors and debtors list relevant to the payer or payee(s) in the transaction have to be updated
+//end::Debtors_Creditor_Panel
 
 //tag::findtransaction[]
 === [Proposed] Find Transaction feature
