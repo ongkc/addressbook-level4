@@ -94,8 +94,3 @@ include::../DeveloperGuide.adoc[tag=addtransaction]
 
 include::../DeveloperGuide.adoc[tag=Debtors_Creditor_Panel]
 
-include::../DeveloperGuide.adoc[tag=deletetransaction]
-
-include::../DeveloperGuide.adoc[tag=usecases]
-
-include::../DeveloperGuide.adoc[tag=manualtesting]
