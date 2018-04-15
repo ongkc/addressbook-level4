@@ -24,13 +24,21 @@ image::AddedTransaction.png[width="800"]
 
 ** Justification: By doing so, the amount pay by a person known as payer will be recorded and displayed on the user interface as know as balance. This allow the user to easily track the amount pay for, for what purpose, and by which person.
 
+** Implementation
+
+include::../DeveloperGuide.adoc[tag=addtransaction]
+
 *Major enhancement*: Create a Debtor & Creditor Table
 
 ** What it does: This feature allows each person to view the amount and people he/she owed, as well as the people and amount other people owed her/him.
 
-image::Debtor.png[width="800"]
+image::DebtTable.png[width="800"]
 
 ** Justification: With this feature, he can easily keep track who owed him/her or people whom he owed money to without the need to remember or calculate by themselves. The amount will be updated after each "payment" or "paydebt" transaction.
+
+** Implementation
+
+include::../DeveloperGuide.adoc[tag=Debtors_Creditor_Panel]
 
 *Minor enhancement*: Prevent a person from deleted if his or her debt is not yet cleared
 
@@ -82,6 +90,8 @@ include::../UserGuide.adoc[tag=addTransaction]
 |===
 
 include::../DeveloperGuide.adoc[tag=addtransaction]
+
+include::../DeveloperGuide.adoc[tag=Debtors_Creditor_Panel]
 
 include::../DeveloperGuide.adoc[tag=deletetransaction]
 

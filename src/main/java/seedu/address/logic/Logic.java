@@ -47,10 +47,8 @@ public interface Logic {
 
     ObservableList<Creditor> getFilteredCreditorsList();
 
-    void updateDebtorsList(Person person);
+    void updateDebtorsAndCreditorList(Person person);
 
-    void updateDebtorsList();
-    void updateCreditorsList(Person person);
+    void updateDebtorsAndCreditorList();
 
-    void updateCreditorsList();
 }
