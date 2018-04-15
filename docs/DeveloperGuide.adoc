@@ -546,7 +546,7 @@ Why it is implemented that way
 
 ==== Debtors & Creditors List Table Implementation
 
-Debtors and Creditor list will only be updated when a person in the person card panel list is selected. When a person is selected, PersonPanelSelectionChangedEvent will be handled by the UI and post an updateDebtorsList and updateCreditorsList event which will be handled by logic as shown by the code below.
+Debtors and Creditor list will only be updated when a person in the person card panel list is selected. When a person is selected, PersonPanelSelectionChangedEvent will be handled by the UI and post an updateDebtorsAndCreditorList event which will be handled by logic as shown by the code below.
 
 * Code Listing
 
@@ -555,7 +555,7 @@ image::PersonSelection.png[width="800"]
 image::Debtors_Creditor.png[width="800"]
 
 
-After which to in order to set the new creditors or debtors lists, a debtList with respect to the person selected will be retrieved using debtTable.get(person) where the person is the key in debtTable object and debtList is the value. Subsequently, using the debtList of the person selected, setDebtor(debtList) and setCreditor(debtList) method will be executed, and the FilteredDebtorsLists and FilteredCreditorList will be updated as shown by the sequence diagram above. Please refer to the diagram and code below.
+After which to in order to set the new creditors or debtors lists, a debtList with respect to the person selected will be retrieved using debtTable.get(person) where the person is the key in debtTable object and debtList is the value. Subsequently, using the debtList of the person selected, setDebtor(debtList) and setCreditor(debtList) method will be executed, and the FilteredDebtorsLists and FilteredCreditorList will be updated as shown by the sequence diagram above. Please refer to the codes below.
 
 * Code Listing
 
