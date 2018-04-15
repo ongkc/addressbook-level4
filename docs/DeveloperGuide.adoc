@@ -12,7 +12,7 @@ ifdef::env-github[]
 endif::[]
 :repoURL: https://github.com/se-edu/addressbook-level4/tree/master
 
-By: `Kok Cong, Wen Qin, Paul Henri`      Since: `March 2018`      Licence: `MIT`
+By: `Kok Cong, Wen Qin, and Paul Henri`      Since: `April 2018`      Licence: `MIT`
 
 == Setting up
 
@@ -30,7 +30,6 @@ This app will not work with earlier versions of Java 8.
 [NOTE]
 IntelliJ by default has Gradle and JavaFx plugins installed. +
 Do not disable them. If you have disabled them, go to `File` > `Settings` > `Plugins` to re-enable them.
-
 
 === Setting up the project in your computer
 
@@ -161,7 +160,7 @@ image::UiClassDiagram.png[width="800"]
 
 *API* : link:{repoURL}/src/main/java/seedu/address/ui/Ui.java[`Ui.java`]
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter`, `BrowserPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class.
+The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter`, `CreditorPanel`, `DebtorPanel`, `TransactionPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class.
 
 The `UI` component uses JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow`] is specified in link:{repoURL}/src/main/resources/view/MainWindow.fxml[`MainWindow.fxml`]
 
@@ -170,6 +169,7 @@ The `UI` component,
 * Executes user commands using the `Logic` component.
 * Binds itself to some data in the `Model` so that the UI can auto-update when data in the `Model` change.
 * Responds to events raised from various parts of the App and updates the UI accordingly.
+// end::DesignUI[]
 
 [[Design-Logic]]
 === Logic component
@@ -209,6 +209,28 @@ The `Model`,
 * exposes an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * does not depend on any of the other three components.
 
+// tag::DebtsTable[]
+==== DebtsTable
+
+DebtsTable is a table that collects the debts between every person.
+
+This feature simplified the calculation, the storing and the retrieving of every debts between the persons added.
+The `DebtTable` is updated when a person or a transaction is added, edited or removed. +
+
+* Implementation of the DebtsTable:
+
+** **Alternative 1 (current choice):** Using a dictionary of every person's `DebtsList`,
+which are dictionaries with all persons that have debts with its owner.
+*** Pros: More flexible. Easy to add and remove a person or a debt. Easy to retrieve the debt between two persons.
+Will use less memory.
+*** Cons: Harder to edit
+** **Alternative 2:** Using an two dimensional array.
+*** Pros: Easy to add or edit a person or a debt.
+*** Cons: Hard to remove a person.
+
+// end::DebtsTable[]
+
+
 [[Design-Storage]]
 === Storage component
 
@@ -231,7 +253,6 @@ Classes used by multiple components are in the `seedu.addressbook.commons` packa
 
 This section describes some noteworthy details on how certain features are implemented.
 
-// tag::undoredo[]
 === Undo/Redo feature
 ==== Current Implementation
 
@@ -357,7 +378,6 @@ image::UndoRedoActivityDiagram.png[width="650"]
 * **Alternative 2:** Use `HistoryManager` for undo/redo
 ** Pros: We do not need to maintain a separate stack, and just reuse what is already in the codebase.
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two * different things.
-// end::undoredo[]
 
 // tag::addtransaction[]
 ===  Add Transaction feature
@@ -393,7 +413,6 @@ image::AddTransactionCode.png[width="800"]
 
 image::CalculationUtil.png[width="800"]
 
-
 ** Debt Table Object
 
 image::DebtTable.png[width="800"]
@@ -421,7 +440,7 @@ Why it is implemented that way
 
 *** Alternative 1: Create a HashMap Object
 ** Pros: Allow debt to be updated easily when a person added or deleted, or when a person information is changed
-** Cons: Find method is required to retrieve the debt information for each person
+** Cons: Find person method is required to retrieve the debt information for each person
 
 *** Alternative 2: Create a list of debtors or creditors unique to each person
 ** Pros: Debt amount can be easily retrieved
@@ -443,7 +462,6 @@ Why it is implemented that way
 There are two ways to triggered the `Select` feature. The first one uses the Command Line Interface, by taping `Select INDEX`.
 The second one directly through the user interface, by clicking on a `Person card`. +
 These two interactions will result in raising the same events. +
-
 
 `SelectCommand` is not a undoable command.
 
@@ -493,8 +511,8 @@ image::TransactionPredicate.png[width="800"]
 
 ==== PersonPanelNoSelection Event process
 In order to raise this event, the selection has to be cleared. There are several ways, it is possible to type
-another command that will clear the selection, such as the `find` command, or by directly deselecting a selected
-`PersonCard` using "*Ctrl + Clic*".
+another command that will clear the selection, such as the `findPerson` command, or by directly deselecting a selected
+`PersonCard` using "*Ctrl + Click*".
 
 .Component interactions for `PersonPanelSelectionChanged` event
 image::PersonPanelSelectionChangedEventDiagram.png[width="800"]
@@ -508,8 +526,8 @@ The `FilteredTransactionList`, `FilteredDebtorList` and `FilteredCreditorList` w
 This implementation can satisfy both user that are used and unused to deal with Command Line.
 This implementation uses events that are raised if needed, so there is no need to check regularly if the selection has changed.
 This implementation saves the application from wasting of computing resource.
+//end::selectfeature[]
 
-// end::selectfeature[]
 //tag::deletetransaction[]
 === Delete Transaction Feature
 
@@ -539,6 +557,7 @@ Why it is implemented that way
 *** Alternative 2: Checking is done concurrently during parse of delete transaction argument, similar to add transaction
 ** Pro: This will ensure exception to be thrown at the earlier part of the execution and prevent bugs from arising due to the inexistent of payer or payee(s)
 ** Con: More line of codes and method has to be added
+
 //end::deletetransaction[]
 
 //tag::Debtors_Creditor_Panel
@@ -555,7 +574,7 @@ image::PersonSelection.png[width="800"]
 image::Debtors_Creditor.png[width="800"]
 
 
-After which to in order to set the new creditors or debtors lists, a debtList with respect to the person selected will be retrieved using debtTable.get(person) where the person is the key in debtTable object and debtList is the value. Subsequently, using the debtList of the person selected, setDebtor(debtList) and setCreditor(debtList) method will be executed, and the FilteredDebtorsLists and FilteredCreditorList will be updated as shown by the sequence diagram above. Please refer to the codes below.
+After which to in order to set the new creditors or debtors lists, a debtList with respect to the person selected will be retrieved using debtTable.get(person) where the person is the key in debtTable object and debtList is the value. Subsequently, using the debtList of the person selected, setDebtor(debtList) and setCreditor(debtList) method will be executed, and the FilteredDebtorsLists and FilteredCreditorList will be updated as shown by the sequence diagram above. Please refer to the diagram and code below.
 
 * Code Listing
 
@@ -568,7 +587,7 @@ image::Debtors_CreditorCodeSetCreditor.png[width="800"]
 ==== Design Considerations
 Why it is implemented that way
 
-===== Aspect: How debtors and creditors list is being updated
+===== Aspect: Checking the existence of payer or payee in the transaction to be deleted
 
 ** Alternative 1: The creditor list and debtor list is not unique to each person
 ** Pro: The current implementation allow the creditor list and debtor list to be updated responsively based on any changes on the debtTable.
@@ -1051,7 +1070,7 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Target user profile*:
 
-* traveller who share many expenses with friends
+* traveller who shares many expenses with other people (friends, family, travel buddies, etc.)
 * prefer desktop apps over other types
 * prefers typing over mouse input
 * is reasonably comfortable using CLI apps
@@ -1073,15 +1092,15 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 * Major feature: Update the User Interface to display the list of transactions.
 * Major feature: Update the User Interface to display the list of transactions related to the person selected
 * Minor feature: Allow user to delete their transactions.
-* Minor feature: Person information in the transaction list to be updated when the person is edited( E.g name).
+* Minor feature: Person information in the transaction list to be updated when the person is edited (e.g name).
 
 *Wen Qin Jia*
 
-* Major feature: Allow users to split their expenses using evenly, by units, and by percentage
-* Minor feature: Calculate and display a net balance for every user based on all their transactions
-* Minor feature: Ensure correct amount is entered for pay debt transaction. (E.g debt must exists, amount entered cannot be more than the debt owed)
-* Minor feature: Calculate and display a net balance for every user based on all their transactions
-* Minor feature: Ensure payer or payee(s) indicated in the transaction exist for every a add transaction command
+* Major feature: Allow users to split their expenses <<split-evenly,evenly>>, <<split-by-percentage,by percentage>> or <<split-by-units,by units>>
+* Minor feature: Calculate and display the total amount spent for every user based on all of their transactions
+* Minor feature: Update the Person class with a Balance field in order to track, display, and store a person's total amount spent
+* Minor feature: Enable multiple payees for transactions
+* Minor feature: Ensure correct amount is entered for paydebt transactions (e.g debt must exist, amount entered cannot be more than the debt owed)
 
 [appendix]
 == User Stories
@@ -1117,17 +1136,15 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |user |edit an expense on the application |correct any mistakes I may have made
 
-|`* * *` |admin user |create a new group |separate different trips by the people who were involved
+|`* *` |admin user |create a new group |separate different trips by the people who were involved
 
-|`* * *` |admin user |add people to a group |know who was involved with the expenses that were shared
+|`* *` |admin user |add people to a group |know who was involved with the expenses that were shared
 
-|`* * *` |admin user |delete people from a group |remove those are are no longer involved with the shared expenses
+|`* *` |admin user |delete people from a group |remove those are are no longer involved with the shared expenses
 
-|`* * *` |user |sort my expense into different categories |keep better track of my expenses
+|`* *` |user |sort my expense into different categories |keep better track of my expenses
 
-|`* * *` |user |use a user-friendly interactive interface |enter input
-
-|`* * *` |user |comment on an expense |clarify an expense or ask questions about it
+|`* *` |user |comment on an expense |clarify an expense or ask questions about it
 
 |`* *` |admin user |set whether other group members can add new people to the group |control who is added
 
@@ -1171,7 +1188,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 (For all use cases below, the *System* is `SmartSplit` and the *Actor* is the `user`, unless specified otherwise)
 
-=== Use case: Add all persons involved in the trip to application
+=== Use case: Add all persons involved in the trip
 
 *Preconditions*
 
@@ -1209,7 +1226,7 @@ Use case ends.
  SmartSplit shows an error message. Use case resume at 3 or use case for add person.
 
 [discrete]
-=== Use case: Add paydebt type transaction (After an amount owed was returned)
+=== Use case: Add paydebt type transaction
 
 *MSS*
 
@@ -1316,6 +1333,7 @@ Use case ends.
 [discrete]
 //end::usecases[]
 
+//start::nonfunctionalrequirements[]
 [appendix]
 == Non Functional Requirements
 
@@ -1327,9 +1345,9 @@ Use case ends.
 .  Should work in both 32-bit and 64-bit environments.
 .  Should be usable by a novice who has never used this system before.
 .  The project is expected to adhere to a schedule that delivers a feature/bug-fix update every week.
+//end::nonfunctionalrequirements[]
 
-_{More to be added}_
-
+//start::glossary[]
 [appendix]
 == Glossary
 
@@ -1339,17 +1357,24 @@ Windows, Linux, Unix, OS-X
 [[private-contact-detail]] Private contact detail::
 A contact detail that is not meant to be shared with others
 
+[[payment]] Payment::
+A type of transaction that allows a user to record a payment that was made on behalf of himself/herself and at least one other person
+
+[[paydebt]] Paydebt::
+A type of transaction that allows a user to record a payment that was made to another person to reduce the debt owed
+
 [[split-evenly]] Split evenly::
 A method of dividing the total cost of an expense by splitting it in even parts over the total number of users involved with that expense
 
 [[split-by-units]] Split by units::
-A method of dividing the total cost of an expense by units and then assigning the specific amount of units (which can vary among users) owed by a user to that user
+A method of dividing the total cost of an expense by units. The amount that each person owes is the number of units that they are responsible for divided by the total number of units
 
-[[settle-balance]] Settle balance::
-A feature that allows a user to record a payment that was made to another user to settle the debt owed
+[[split-by-percentage]] Split by percentage::
+A method of dividing the total cost of an expense by percentages that add up to 100. The amount that each person owes is the percentage that they are responsible for multiplied by the amount
 
 [[recurring-expense]] Recurring expense::
 An expense that does not change in amount over a repeated time period (e.g. every month) and is always incurred by a user
+//end::glossary[]
 
 //tag::manualtesting[]
 [appendix]
@@ -1376,7 +1401,7 @@ These instructions only provide a starting point for testers to work on; testers
 
 === Adding a person
 
-. A person can be added only if the name is different and is case sensitive.
+. A person can be added only if the name is different, regardless of case (e.g. John Doe, john doe, and JOHN DOE are considered to all be the same).
 .. Test case: `addPerson n/john Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, `addPerson n/joHn DoE p/98765432 e/johnd@example.com t/friends t/owesMoney`
    Expected: This person already exists in the address book. The name must be unique.
 .. Test case: `addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`
@@ -1384,7 +1409,7 @@ These instructions only provide a starting point for testers to work on; testers
 
 === Adding a transaction
 
-. A transaction can be either payment or paydebt.
+. A transaction can be either of type <<payment,payment>> or <<paydebt,paydebt>>.
 .. A payment type transaction should be used if a person is making a payment for multiple people.
 .. A paydebt type transaction should be used when a person have already returned the amount owed to other person.
 .. All transactions can only be made if the payer or payee(s) indicated in the transaction exist in the application
@@ -1395,7 +1420,8 @@ These instructions only provide a starting point for testers to work on; testers
 .. Before you proceed, please add the following persons to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney`
 
 ==== Payment Type Transaction
-. A payment transaction allows one payer to one or more payees. There are three types of payment methods, split evenly , by percentages or by units. After each payment transaction is added, the amount spent based on the type of splitting methods indicated, will be updated and added onto the "Amount Spent" person panel card.
+
+. A payment transaction allows one payer to one or more payees. There are three types of payment methods, <<split-evenly,split evenly>>, <<split-by-percentage,by percentage>> or <<split-by-units,by units>>. After each payment transaction is added, the amount spent based on the type of splitting methods indicated, will be updated and added onto the "Amount Spent" person panel card.
 .. Split Evenly(Default method)
 ... Test case: `addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
 
@@ -1443,8 +1469,7 @@ These instructions only provide a starting point for testers to work on; testers
 
 ==== Paydebt Type Transaction
 
-. A paydebt type transaction only allow one payer to one payee.
-
+. A paydebt type transaction only allows one payer to one payee.
 .. Before you proceed, please clear the application, `clear` and add the following persons and transaction to the application: 1)`addPerson n/John Doe p/98765432 e/johnd@example.com t/friends t/owesMoney`, 2)`addPerson n/Bernice Yu p/98765432 e/johnd@example.com t/friends t/owesMoney`, 3) `addPerson n/Alex Yeoh p/98765432 e/johnd@example.com t/friends t/owesMoney` and follow the order of each test case below.
 
  4)`addtransaction type/payment payer/John Doe a/120.00 d/Taxi ride to NUS payee/Alex Yeoh payee/Bernice Yu m/evenly`
@@ -1511,32 +1536,18 @@ These instructions only provide a starting point for testers to work on; testers
 
 . Dealing with missing/corrupted data files
 
-.. Missing & Invalid Transaction type
-
-   Expected: Transaction type can only be "paydebt" or "payment" and it should not be blank
-
-.. Missing & Invalid Missing payer
-
-   Expected: Transaction's Payer field is missing!
-
-.. Missing & Invalid Transaction amount
-
-   Expected: Amount can only take in a positive numerical number up to 2 decimal places, and it should not be blank
-
-.. Missing & Invalid Transaction description
-
-   Expected: Transaction description can take any value and should not be blank
-
-.. Missing & Invalid Transaction payee
-
-   Expected: Transaction's Payees field is missing!
-
-.. Missing & Invalid Transaction Date
-
-   Expected: Transaction's Date field is missing, or is in wrong format(date format example: 2018-04-14T17:22:56.218+08:00
-
-.. Missing & Invalid Split method
-
-   Expected: Transaction split method can only be "evenly", "units", or "percentage"
-//end::deletetransaction[]
-
+.. Missing & Invalid Transaction type +
+   Expected: `Transaction type can only be "paydebt" or "payment" and it should not be blank`
+.. Missing & Invalid Missing payer +
+   Expected: `Transaction's Payer field is missing!` +
+   This message exists for every mandatory field of the Transaction class (i.e. Type, Payer, Amount, Description, Payees, SplitMethod)
+.. Missing & Invalid Transaction amount +
+   Expected: `Amount can only take in a positive numerical number up to 2 decimal places, and it should not be blank`
+.. Missing & Invalid Transaction description +
+   Expected: `Transaction description can take any value and should not be blank`
+.. Missing & Invalid Transaction payee +
+   Expected: `Transaction's Payees field is missing!`
+.. Missing & Invalid Transaction Date +
+   Expected: `Transaction's Date field is missing, or is in wrong format (date format example: 2018-04-14T17:22:56.218+08:00)`
+.. Missing & Invalid Split method +
+   Expected: `Transaction split method can only be "evenly", "units", or "percentage"`
